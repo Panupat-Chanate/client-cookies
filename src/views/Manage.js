@@ -85,6 +85,11 @@ class Dashboard extends Component {
       },
       cookie: [],
       modal: false,
+      txtcookieId: '',
+      txtBrowser: '',
+      txtIp: '',
+      txtType: '',
+      txtdate: ''
     };
   }
   componentDidMount(){
@@ -305,7 +310,9 @@ class Dashboard extends Component {
     var value = {
       cookieid: this.state.txtcookieId,
       date: this.state.txtdate,
-      ip: this.state.txtIp
+      ip: this.state.txtIp,
+      type: this.state.txtType,
+      browser: this.state.txtBrowser,
     }
     axios.post("http://127.0.0.1:5000/cookies/api/data/search", value)
     .then((response) => {
@@ -459,7 +466,7 @@ class Dashboard extends Component {
                         <FormGroup>
                           <label>Browser</label>
                           <Input className="txt1rem"
-                            id="txtcookieId"
+                            id="txtBrowser"
                             defaultValue={this.state.txtBrowser}
                             onChange={this.handleChanage}
                             type="text"

@@ -118,7 +118,7 @@ class Dashboard extends Component {
       var lastday = new Date(dateNow.setDate(last)).toLocaleString();
       var fDay = firstday.slice(0, 9)
       var lDay = lastday.slice(0, 9)
-      
+
       for (var i=0; i<response.data.length; i++) {
         var sliDateDB = new Date(response.data[i].createdAt).toLocaleString().slice(0, 9)
         var strPath = response.data[i].data[5].pathname
@@ -130,20 +130,20 @@ class Dashboard extends Component {
         if (sliDateNow===sliDateDB) {
           if (strPath!=undefined) {
             if (strPath==="/") { dPath.push("index") }
-            else { dPath.push(strPath.split("/")[1]) }
+            else { dPath.push(strPath.split("/")[1].slice(0,10)) }
             dPeople.push(strPeople)
           }
         }
         if (getMonth===dbMonth) {
           if (strPath!=undefined){
             if (strPath==='/') { mPath.push("index") }
-            else { mPath.push(strPath.split("/")[1]) }
+            else { mPath.push(strPath.split("/")[1].slice(0,10)) }
             mPeople.push(strPeople)
           }
         }
         if (sliDateDB>=fDay && sliDateDB<=lDay && strPath!=undefined) {
           if (strPath==='/') { wPath.push("index") }
-          else { wPath.push(strPath.split("/")[1]) }
+          else { wPath.push(strPath.split("/")[1].slice(0,10)) }
           wPeople.push(strPeople)
         }
 
