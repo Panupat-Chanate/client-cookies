@@ -145,8 +145,8 @@
   }
   .noncheck {
     top: .65rem;
-    font-size: 20px;
-    color: #ff4444;
+    font-size: 16px;
+    color: #ffffff;
     cursor: pointer;
   }
   .modal.show .modal-dialog {
@@ -160,9 +160,14 @@
     cursor: pointer;
   }
   .my-address {
-    /* top: .65rem; */
     font-size: 40px;
     margin-top: -20px;
+  }
+  a.disabled {
+    pointer-events: none;
+    cursor: default;
+    color: rgba(125, 125, 126, 0.3);
+    /* ba54f5 */
   }
   .form-control {
     /* font-size: 1rem; */
@@ -177,6 +182,10 @@
   .form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control {
     background-color: #fff;
   }
+  /* .form-group .form-control, .input-group .form-control {
+    background-color: #fff;
+    color:#525f7f;
+  } */
   /* .modal-open .modal {
     overflow-y: hidden;
   } */

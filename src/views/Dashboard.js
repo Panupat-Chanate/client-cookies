@@ -14,6 +14,7 @@ import {
   Row,
   Col,
 } from "reactstrap";
+import { useHistory } from "react-router-dom";
 
 class Dashboard extends Component {
   constructor(props) {
@@ -82,7 +83,7 @@ class Dashboard extends Component {
   }
   componentDidMount(){
     // this.timer = setInterval(() => 
-    // this.getAgree(),10000
+    //   this.getAgree(),10000
     // )
   }
 
@@ -110,17 +111,16 @@ class Dashboard extends Component {
     .then((response) => {
       console.log(response.data)
       var dateNow = new Date();
-      var sliDateNow = dateNow.toISOString().slice(0, 10)
-
+      var sliDateNow = dateNow.toLocaleString().slice(0, 9)
       var first = dateNow.getDate() - dateNow.getDay();
       var last = first + 6;
-      var firstday = new Date(dateNow.setDate(first)).toISOString();
-      var lastday = new Date(dateNow.setDate(last)).toISOString();
-      var fDay = firstday.slice(0, 10)
-      var lDay = lastday.slice(0, 10)
-
+      var firstday = new Date(dateNow.setDate(first)).toLocaleString();
+      var lastday = new Date(dateNow.setDate(last)).toLocaleString();
+      var fDay = firstday.slice(0, 9)
+      var lDay = lastday.slice(0, 9)
+      
       for (var i=0; i<response.data.length; i++) {
-        var sliDateDB = response.data[i].createdAt.slice(0, 10)
+        var sliDateDB = new Date(response.data[i].createdAt).toLocaleString().slice(0, 9)
         var strPath = response.data[i].data[5].pathname
         var strPeople = response.data[i].cookieId
         var DateDB = new Date(response.data[i].createdAt);
@@ -252,7 +252,7 @@ class Dashboard extends Component {
       var Month12 = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
       var Cnt12 = [];
       var Val12 = [];
-      var sumVal = [];
+      var sumVal = 0;
       for (var i=0; i<getMonth+1; i++) {
         Cnt12.push(Month12[i])
         Val12.push(mLen[i])
@@ -376,16 +376,15 @@ class Dashboard extends Component {
         var longitudeCardinal = degrees2 >= 0 ? "E" : "W";
         var latlng = degrees1+"°"+minutes1+"'"+seconds1+"''"+latitudeCardinal+"+"+degrees2+"°"+minutes2+"'"+seconds2+"''"+longitudeCardinal;
         var cookieId = response.data[i].cookieId
-        var date = response.data[i].createdAt.slice(0,10)
-        var time =  response.data[i].createdAt.slice(11,16)
+        var timezone = new Date(response.data[i].createdAt).toLocaleString();
         var chkVal = response.data[i].data[2].latitude
-        rowVal.push({cookieId,date,time,latlng,chkVal})
+        rowVal.push({cookieId,timezone,latlng,chkVal})
       }
       this.setState({
         dataTable: {
           columns: [
             {
-              label: 'date',
+              label: 'date (MM/DD/YYYY)',
               field: 'dt',
               width: 150,
               attributes: {
@@ -411,7 +410,7 @@ class Dashboard extends Component {
           ],
           rows: [...rowVal.map((item, index) => (
             {
-              dt: item.date+' / '+item.time,
+              dt: item.timezone,
               id: item.cookieId,
               address: <div className="text-center">{item.chkVal
                 ?<a href={"https://www.google.com/maps/place/"+item.latlng} target="_blank">
@@ -508,166 +507,170 @@ class Dashboard extends Component {
     });
   }
   render() {
-    return (
-      <>
-        <div className="content">
-          <Row>
-            <Col lg="4">
-              <Card className="card-chart">
-                <CardHeader>
-                  <h5 className="card-category">Day</h5>
-                  <CardTitle tag="h4">
-                    <i className="tim-icons icon-bell-55 text-info" /> {this.state.lenDay} time
-                  </CardTitle>
-                  <CardTitle tag="h4">
-                    <i className="far fa-user text-info"></i> {this.state.cntPDD} people
-                  </CardTitle>
-                </CardHeader>
-              </Card>
-            </Col>
-            <Col lg="4">
-              <Card className="card-chart">
-                <CardHeader>
-                  <h5 className="card-category">Week</h5>
-                  <CardTitle tag="h4">
-                    <i className="tim-icons icon-bell-55 text-info" /> {this.state.lenWeek} time
-                  </CardTitle>
-                  <CardTitle tag="h4">
-                    <i className="far fa-user text-info"></i> {this.state.cntPWW} people
-                  </CardTitle>
-                </CardHeader>
-              </Card>
-            </Col>
-            <Col lg="4">
-              <Card className="card-chart">
-                <CardHeader>
-                  <h5 className="card-category">Month</h5>
-                  <CardTitle tag="h4">
-                    <i className="tim-icons icon-bell-55 text-info" /> {this.state.lenMonth} time
-                  </CardTitle>
-                  <CardTitle tag="h4">
-                    <i className="far fa-user text-info" /> {this.state.cntPMM} people
-                  </CardTitle>
-                </CardHeader>
-              </Card>
-            </Col>
-            <Col lg="12">
-              <Card className="card-chart">
-                <CardHeader>
-                  <Row>
-                    <Col className="text-left" sm="6">
-                      <h5 className="card-category">Total</h5>
-                      <CardTitle tag="h2">Performance</CardTitle>
-                    </Col>
-                    <Col sm="6">
-                      <ButtonGroup
-                        className="btn-group-toggle float-right"
-                        data-toggle="buttons"
-                      >
-                        <Button
-                          tag="label"
-                          className={classNames("btn-simple", {
-                            active: this.state.name === "data1",
-                          })}
-                          color="info"
-                          id="0"
-                          size="sm"
-                          onClick={this.handleClick1}
+    // if(this.props.location.state) {
+      return (
+        <>
+          <div className="content">
+            <Row>
+              <Col lg="4">
+                <Card className="card-chart">
+                  <CardHeader>
+                    <h5 className="card-category">Day</h5>
+                    <CardTitle tag="h4">
+                      <i className="tim-icons icon-bell-55 text-info" /> {this.state.lenDay} time
+                    </CardTitle>
+                    <CardTitle tag="h4">
+                      <i className="far fa-user text-info"></i> {this.state.cntPDD} people
+                    </CardTitle>
+                  </CardHeader>
+                </Card>
+              </Col>
+              <Col lg="4">
+                <Card className="card-chart">
+                  <CardHeader>
+                    <h5 className="card-category">Week</h5>
+                    <CardTitle tag="h4">
+                      <i className="tim-icons icon-bell-55 text-info" /> {this.state.lenWeek} time
+                    </CardTitle>
+                    <CardTitle tag="h4">
+                      <i className="far fa-user text-info"></i> {this.state.cntPWW} people
+                    </CardTitle>
+                  </CardHeader>
+                </Card>
+              </Col>
+              <Col lg="4">
+                <Card className="card-chart">
+                  <CardHeader>
+                    <h5 className="card-category">Month</h5>
+                    <CardTitle tag="h4">
+                      <i className="tim-icons icon-bell-55 text-info" /> {this.state.lenMonth} time
+                    </CardTitle>
+                    <CardTitle tag="h4">
+                      <i className="far fa-user text-info" /> {this.state.cntPMM} people
+                    </CardTitle>
+                  </CardHeader>
+                </Card>
+              </Col>
+              <Col lg="12">
+                <Card className="card-chart">
+                  <CardHeader>
+                    <Row>
+                      <Col className="text-left" sm="6">
+                        <h5 className="card-category">Total</h5>
+                        <CardTitle tag="h2">Performance</CardTitle>
+                      </Col>
+                      <Col sm="6">
+                        <ButtonGroup
+                          className="btn-group-toggle float-right"
+                          data-toggle="buttons"
                         >
-                          <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">
-                            Day
-                          </span>
-                          <span className="d-block d-sm-none">
-                            <i className="tim-icons icon-single-02" />
-                          </span>
-                        </Button>
-                        <Button
-                          color="info"
-                          id="1"
-                          size="sm"
-                          tag="label"
-                          className={classNames("btn-simple", {
-                            active: this.state.name === "data2",
-                          })}
-                          onClick={this.handleClick2}
-                        >
-                          <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">
-                            Week
-                          </span>
-                          <span className="d-block d-sm-none">
-                            <i className="tim-icons icon-gift-2" />
-                          </span>
-                        </Button>
-                        <Button
-                          color="info"
-                          id="2"
-                          size="sm"
-                          tag="label"
-                          className={classNames("btn-simple", {
-                            active: this.state.name === "data3",
-                          })}
-                          onClick={this.handleClick3}
-                        >
-                          <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">
-                            Month
-                          </span>
-                          <span className="d-block d-sm-none">
-                            <i className="tim-icons icon-tap-02" />
-                          </span>
-                        </Button>
-                      </ButtonGroup>
-                    </Col>
-                  </Row>
-                </CardHeader>
-                <CardBody>
-                  <div className="chart-area">
-                    <Bar
-                      data={this.state.dataCharts}
-                      options={this.state.options}
-                    />
-                  </div>
-                </CardBody>
-              </Card>
-            </Col>
-          </Row>
+                          <Button
+                            tag="label"
+                            className={classNames("btn-simple", {
+                              active: this.state.name === "data1",
+                            })}
+                            color="info"
+                            id="0"
+                            size="sm"
+                            onClick={this.handleClick1}
+                          >
+                            <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">
+                              Day
+                            </span>
+                            <span className="d-block d-sm-none">
+                              <i className="tim-icons icon-single-02" />
+                            </span>
+                          </Button>
+                          <Button
+                            color="info"
+                            id="1"
+                            size="sm"
+                            tag="label"
+                            className={classNames("btn-simple", {
+                              active: this.state.name === "data2",
+                            })}
+                            onClick={this.handleClick2}
+                          >
+                            <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">
+                              Week
+                            </span>
+                            <span className="d-block d-sm-none">
+                              <i className="tim-icons icon-gift-2" />
+                            </span>
+                          </Button>
+                          <Button
+                            color="info"
+                            id="2"
+                            size="sm"
+                            tag="label"
+                            className={classNames("btn-simple", {
+                              active: this.state.name === "data3",
+                            })}
+                            onClick={this.handleClick3}
+                          >
+                            <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">
+                              Month
+                            </span>
+                            <span className="d-block d-sm-none">
+                              <i className="tim-icons icon-tap-02" />
+                            </span>
+                          </Button>
+                        </ButtonGroup>
+                      </Col>
+                    </Row>
+                  </CardHeader>
+                  <CardBody>
+                    <div className="chart-area">
+                      <Bar
+                        data={this.state.dataCharts}
+                        options={this.state.options}
+                      />
+                    </div>
+                  </CardBody>
+                </Card>
+              </Col>
+            </Row>
+            
+            <Row>
+              <Col lg="12">
+                <Card className="card-chart">
+                  <CardHeader>
+                    <h5 className="card-category">Total</h5>
+                    <CardTitle tag="h3">
+                      <i className="tim-icons icon-bell-55 text-info" /> {this.state.sumVal} times per year
+                    </CardTitle>
+                  </CardHeader>
+                  <CardBody>
+                    <div className="chart-area">
+                      <Line
+                        data={this.state.dataChart1}
+                        options={this.state.options}
+                      />
+                    </div>
+                  </CardBody>
+                </Card>
+              </Col>
+            </Row>
           
-          <Row>
-            <Col lg="12">
-              <Card className="card-chart">
-                <CardHeader>
-                  <h5 className="card-category">Total</h5>
-                  <CardTitle tag="h3">
-                    <i className="tim-icons icon-bell-55 text-info" /> {this.state.sumVal} time
-                  </CardTitle>
-                </CardHeader>
-                <CardBody>
-                  <div className="chart-area">
-                    <Line
-                      data={this.state.dataChart1}
-                      options={this.state.options}
-                    />
-                  </div>
-                </CardBody>
-              </Card>
-            </Col>
-          </Row>
-        
-          <Row>
-            <Col lg="12" md="12">
-              <Card>
-                <CardBody>
-                <MDBDataTable
-                  striped
-                  small
-                  data={this.state.dataTable}
-                />
-                </CardBody>
-              </Card>
-            </Col>
-          </Row>
-        </div>
-      </>
-    );
+            <Row>
+              <Col lg="12" md="12">
+                <Card>
+                  <CardBody>
+                  <MDBDataTable
+                    striped
+                    small
+                    data={this.state.dataTable}
+                  />
+                  </CardBody>
+                </Card>
+              </Col>
+            </Row>
+          </div>
+        </>
+      );
+    // } else {
+    //   return 
+    // }
   }
 }
 

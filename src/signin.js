@@ -1,149 +1,154 @@
-import React, { useState, useEffect } from 'react';
-import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import Link from '@material-ui/core/Link';
-import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
-import axios from 'axios';
-import { browserHistory } from 'react-router';
+import React,{useState} from "react"
+import { makeStyles } from "@material-ui/core/styles"
+import InputAdornment from "@material-ui/core/InputAdornment"
+import Icon from "@material-ui/core/Icon"
+import People from "@material-ui/icons/People"
+import GridContainer from "imcomponents/Grid/GridContainer.js"
+import GridItem from "imcomponents/Grid/GridItem.js"
+import Button from "imcomponents/CustomButtons/Button.js"
+import Card from "imcomponents/Card/Card.js"
+import CardBody from "imcomponents/Card/CardBody.js"
+import CardFooter from "imcomponents/Card/CardFooter.js"
+import CustomInput from "imcomponents/CustomInput/CustomInput.js"
+import styles from "assets/jss/material-kit-react/views/loginPage.js"
+import Lottile from "imcomponents/lottie/index"
+import image from "assets/img/bg004.jfif"
+import axios from "axios"
+import { Link } from "react-router-dom"
+import { useHistory } from "react-router-dom";
 
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {'Copyright © '}
-      <Link color="inherit" href="">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
+const useStyles = makeStyles(styles)
 
-const useStyles = makeStyles((theme) => ({
-  paper: {
-    marginTop: theme.spacing(8),
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
-  },
-  form: {
-    width: '100%', // Fix IE 11 issue.
-    marginTop: theme.spacing(1),
-  },
-  submit: {
-    margin: theme.spacing(3, 0, 2),
-  },
-}));
+export default function LoginContainer({ _login, _input, loading}) {
+  const [username,setUsername] = useState('')
+  const [password,setPassword] = useState('')
+  let history = useHistory();
+  const [cardAnimaton, setCardAnimation] = React.useState("cardHidden")
+  setTimeout(function () {
+    setCardAnimation("")
+  }, 700)
+  const classes = useStyles()
 
-export default function SignIn() {
-  const classes = useStyles();
-  const [txtUser, setTxtUser] = useState()
-  const [txtPass, setTxtPass] = useState()
-  // useEffect(() => {
 
-  // })
-  function handleSubmit(e){
-    var value = {
-      username: txtUser,
-      password: txtPass
+  const handleUsername = event =>{
+    setUsername(event.target.value)
+  }
+
+  const handlePassword = events =>{
+    setPassword(events.target.value)
+  }
+
+  const clearToken = () => {
+    localStorage.removeItem('tokenId')
+    window.location.reload()
+  }
+
+  const historyPage =()=>{
+    history.goBack()
+    window.location.reload();
+  }
+
+  _login = (e) => {
+    e.preventDefault()
+    const form = {
+      username: e.target.username.value,
+      password: e.target.pass.value
+
     }
-    axios.post("http://127.0.0.1:5000/cookies/api/users/checklogin/",value)
-    .then((response) => {
-      if (response.data.data.statusLogin === true) {
-      browserHistory.push("/admin");
-      } else {
-        
+    console.log(form)
+    axios ({
+      url: 'http://127.0.0.1:5000/cookies/api/users/checklogin',
+      method: 'POST',
+      data: form
+    })
+    .then((res) => {
+      console.log(res.data)
+      const {statusLogin} = res.data.data
+      const {token} = res.data
+      localStorage.setItem(`tokenId`,token)
+      if (statusLogin === true) {
+        return history.push('/admin')
       }
-    }).catch((error) => {
-      console.log(error)
+      alert('ชื่อหรือรหัสผ่านผิด')
+    })
+    .catch((error) => {
+      console.log(error);
     });
 
   }
-  function handleUser(e){
-    setTxtUser(e.target.value)
-  }
-  function handlePass(e){
-    setTxtPass(e.target.value)
-  }
-  return (
-    <Container component="main" maxWidth="xs">
-      <CssBaseline />
-      <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5" color="secondary">
-          SIGN-IN
-        </Typography>
-        <form className={classes.form} noValidate>
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            id="username"
-            label="Username"
-            name="username"
-            autoComplete="username"
-            autoFocus
-            onChange={handleUser}
-          />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Password"
-            type="password"
-            id="password"
-            autoComplete="current-password"
-            onChange={handlePass}
-          />
-          {/* <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
-          /> */}
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-            onClick={handleSubmit}
-          >
-            Sign In
-          </Button>
-          <Grid container>
-            <Grid item xs>
-              {/* <Link href="#" variant="body2">
-                Forgot password?
-              </Link> */}
-            </Grid>
-            <Grid item>
-              <Link href="#" variant="body2">
-                {"Don't have an account? Sign Up"}
-              </Link>
-            </Grid>
-          </Grid>
-        </form>
+  const tokenId = localStorage.getItem("tokenId")
+  if(!tokenId){
+    return (
+      <div>
+        <div
+          className={classes.pageHeader}
+          style={{
+            backgroundImage: "url(" + image + ")",
+            backgroundSize: "cover",
+            backgroundPosition: "top center",
+          }}
+        >
+          <div className={classes.container}>
+            <GridContainer>
+              <GridItem xs={6}>
+                <Lottile height={400} width={400} animationData="loginpage" />
+              </GridItem>
+              {/* <GridItem xs={6} justify="center" alignItems="center"> */}
+              <GridItem xs={6}>
+                <Card className={classes[cardAnimaton]}>
+                  <form className={classes.form} onSubmit={_login}>
+                    {/* <h5 className={classes.divider} style={{fontWeight:700}}>LOGIN
+                    </h5> */}
+                    <CardBody>
+                      <CustomInput
+                        labelText="USERNAME"
+                        id="username"
+                        formControlProps={{
+                          fullWidth: true,
+                        }}
+                        inputProps={{
+                          type: "text",
+                          endAdornment: (
+                            <InputAdornment position="end">
+                              <People className={classes.inputIconsColor} />
+                            </InputAdornment>
+                          ),
+                        }}
+                        onChange={handleUsername}
+                      />
+                      <CustomInput
+                        labelText="PASSWORD"
+                        id="pass"
+                        formControlProps={{
+                          fullWidth: true,
+                        }}
+                        inputProps={{
+                          type: "password",
+                          endAdornment: (
+                            <InputAdornment position="end">
+                              <i className="fas fa-lock"></i>
+                            </InputAdornment>
+                          ),
+                          autoComplete: "off",
+                        }}
+                        onChange={handlePassword}
+                      />
+                    </CardBody>
+                    <CardFooter className={classes.cardFooter}>
+                      <Button color="primary" type="submit">
+                        LOGIN
+                      </Button>
+                    </CardFooter>
+                  </form>
+                </Card>
+              </GridItem>
+            </GridContainer>
+          </div>
+        </div>
       </div>
-      <Box mt={8}>
-        <Copyright />
-      </Box>
-    </Container>
-  );
+    )
+  }else{
+    return clearToken()
+    // return historyPage()
+  }
 }

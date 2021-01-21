@@ -18,7 +18,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
-import {browserHistory} from 'react-router';
 import AdminLayout from "layouts/Admin/Admin.js";
 import RTLLayout from "layouts/RTL/RTL.js";
 import Signin from "signin"
@@ -33,11 +32,11 @@ import BackgroundColorWrapper from "./components/BackgroundColorWrapper/Backgrou
 ReactDOM.render(
   <ThemeContextWrapper>
     <BackgroundColorWrapper>
-      <BrowserRouter history={browserHistory}>
+      <BrowserRouter>
         <Switch>
           <Route path="/admin" render={(props) => <AdminLayout {...props} />} />
-          <Route path="/rtl" render={(props) => <RTLLayout {...props} />} />
-          <Route path="/" render={(props) => <Signin {...props} />} />
+          {/* <Route path="/rtl" render={(props) => <RTLLayout {...props} />} /> */}
+          <Route path="/signin" render={(props) => <Signin {...props} />} />
           <Redirect from="/" to="/signin" />
         </Switch>
       </BrowserRouter>

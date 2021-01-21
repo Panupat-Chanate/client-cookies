@@ -18,7 +18,7 @@
 import React from "react";
 // nodejs library that concatenates classes
 import classNames from "classnames";
-
+import { useHistory } from 'react-router-dom';
 // reactstrap components
 import {
   Button,
@@ -40,9 +40,11 @@ import {
 } from "reactstrap";
 
 function AdminNavbar(props) {
+  console.log(props)
   const [collapseOpen, setcollapseOpen] = React.useState(false);
   const [modalSearch, setmodalSearch] = React.useState(false);
   const [color, setcolor] = React.useState("navbar-transparent");
+  let history = useHistory();
   React.useEffect(() => {
     window.addEventListener("resize", updateColor);
     // Specify how to clean up after this effect:
@@ -71,6 +73,11 @@ function AdminNavbar(props) {
   const toggleModalSearch = () => {
     setmodalSearch(!modalSearch);
   };
+  const logout = () => {
+    localStorage.removeItem('tokenId')
+    // localStorage.clear();
+    history.push('/signin');
+ }
   return (
     <>
       <Navbar className={classNames("navbar-absolute", color)} expand="lg">
@@ -168,7 +175,7 @@ function AdminNavbar(props) {
                   </NavLink> */}
                   {/* <DropdownItem divider tag="li" /> */}
                   <NavLink tag="li">
-                    <DropdownItem className="nav-item">Log out</DropdownItem>
+                    <DropdownItem className="nav-item" onClick={logout}>Log out</DropdownItem>
                   </NavLink>
                 </DropdownMenu>
               </UncontrolledDropdown>

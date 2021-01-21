@@ -79,19 +79,24 @@ function Admin(props) {
     setsidebarOpened(!sidebarOpened);
   };
   const getRoutes = (routes) => {
+    const tokenId = localStorage.getItem("tokenId")
+    if(tokenId){
     return routes.map((prop, key) => {
       if (prop.layout === "/admin") {
-        return (
-          <Route
-            path={prop.layout + prop.path}
-            component={prop.component}
-            key={key}
-          />
-        );
+          return (
+            <Route
+              path={prop.layout + prop.path}
+              component={prop.component}
+              key={key}
+            />
+          );
       } else {
         return null;
       }
     });
+    } else {
+      return <Redirect to={'/signin'} />
+    }
   };
   const getBrandText = (path) => {
     for (let i = 0; i < routes.length; i++) {

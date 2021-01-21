@@ -26,6 +26,9 @@ import {
   Form
 } from "reactstrap";
 import { Modal } from 'react-bootstrap';
+import Switch from '@material-ui/core/Switch';
+import TextField from '@material-ui/core/TextField';
+import { DatePicker, Space } from 'antd';
 
 class Dashboard extends Component {
   constructor(props) {
@@ -98,8 +101,7 @@ class Dashboard extends Component {
       var test = [];
       for (var i=0; i<response.data.length; i++) {
         var cookieId = response.data[i].cookieId
-        var date = response.data[i].createdAt.slice(0,10)
-        var time =  response.data[i].createdAt.slice(11,16)
+        var datetime = new Date(response.data[i].createdAt).toLocaleString();
         var access =  response.data[i].access
         var _id =  response.data[i]._id
         var ip = response.data[i].data[0].ipAdress
@@ -121,8 +123,8 @@ class Dashboard extends Component {
         var latitudeCardinal = degrees1 >= 0 ? "N" : "S";
         var longitudeCardinal = degrees2 >= 0 ? "E" : "W";
         var latlng = degrees1+"°"+minutes1+"'"+seconds1+"''"+latitudeCardinal+"+"+degrees2+"°"+minutes2+"'"+seconds2+"''"+longitudeCardinal;
-
-        test.push({cookieId,date,time,access,_id,ip,type,path,browser,typeId,latlng})
+        var chkVal = response.data[i].data[2].latitude
+        test.push({cookieId,datetime,access,_id,ip,type,path,browser,typeId,latlng,chkVal})
       }
       console.log(test)
       this.setState({
@@ -131,8 +133,8 @@ class Dashboard extends Component {
         dataTable: {
           columns: [
             {
-              label: 'cookies-id',
-              field: 'id',
+              label: 'date (MM/DD/YYYY)',
+              field: 'dt',
               width: 150,
               attributes: {
                 'aria-controls': 'DataTable',
@@ -142,13 +144,23 @@ class Dashboard extends Component {
               },
             },
             {
-              label: 'date',
-              field: 'date',
+              label: 'cookies-id',
+              field: 'id',
               width: 270,
             },
             {
-              label: 'time',
-              field: 'time',
+              label: 'ip',
+              field: 'ip',
+              width: 200,
+            },
+            {
+              label: 'type',
+              field: 'type',
+              width: 200,
+            },
+            {
+              label: 'browser',
+              field: 'browser',
               width: 200,
             },
             {
@@ -159,16 +171,18 @@ class Dashboard extends Component {
           ],
           rows: [...test.map((item, index) => (
             {
+              dt: item.datetime,
               id: item.cookieId,
-              date: item.date,
-              time: item.time,
+              ip: item.ip,
+              type: item.type,
+              browser: item.browser,
             //   status: <div className="text-center">{item.access==='1'
             //   ?<i className="fas fa-check-circle check" id={'{"_id":"'+item._id+'", "access":"'+item.access+'"}'} onClick={this.changeStatus}></i>
             //   :<i className="fas fa-times-circle noncheck" id={'{"_id":"'+item._id+'", "access":"'+item.access+'"}'} onClick={this.changeStatus}></i>}
             // </div>,
               detail: <div className="text-center">
-                <i class="far fa-eye text-primary check" onClick={this.modalClick}
-                  id={'{"cookieId":"'+item.cookieId+'", "date":"'+item.date+'", "time":"'+item.time+'", "access":"'+item.access+'", "_id":"'+item._id+'", "ip":"'+item.ip+'", "type":"'+item.type+'", "path":"'+item.path+'", "browser":"'+item.browser+'", "typeId":"'+item.typeId+'", "latlng":"'+item.latlng+'"}'}
+                <i className={item.access==='1'?"far fa-eye text-primary check":"far fa-eye check"} onClick={this.modalClick}
+                  id={'{"cookieId":"'+item.cookieId+'", "datetime":"'+item.datetime+'", "access":"'+item.access+'", "_id":"'+item._id+'", "ip":"'+item.ip+'", "type":"'+item.type+'", "path":"'+item.path+'", "browser":"'+item.browser+'", "typeId":"'+item.typeId+'", "latlng":"'+item.latlng+'", "chkVal":"'+item.chkVal+'"}'}
                 ></i>
               </div>
             }
@@ -180,24 +194,27 @@ class Dashboard extends Component {
   
   changeStatus=(e)=>{
     const Item = JSON.parse(e.target.id)
-    if (Item.access === '1') { var access = '0'}
-    else {var access = '1'}
+    if (Item.access === '1') { Item.access = '0'}
+    else {Item.access = '1'}
     var value = {
         _id: Item._id,
-        access: access,
+        access: Item.access,
     }
     console.log(value)
     axios.post("http://127.0.0.1:5000/cookies/api/update", value)
     .then((response) => {
         console.log(response)
         this.increment();
+        this.setState({
+          access: Item.access
+        })
     }).catch((error) => {
     console.log(error)
     });
   }
   modalClick = (e) => {
     const Item = JSON.parse(e.target.id)
-    console.log(Item)
+    console.log(Item._id)
     if (Item.path==='') { Item.path = "index" }
     axios.get("http://127.0.0.1:5000/cookies/api/agree/"+Item.cookieId+"")
     .then((response) => {
@@ -221,17 +238,16 @@ class Dashboard extends Component {
         var latitudeCardinal = degrees1 >= 0 ? "N" : "S";
         var longitudeCardinal = degrees2 >= 0 ? "E" : "W";
         var latlng = degrees1+"°"+minutes1+"'"+seconds1+"''"+latitudeCardinal+"+"+degrees2+"°"+minutes2+"'"+seconds2+"''"+longitudeCardinal;
-        var date = response.data[i].createdAt.slice(0,10)
-        var time =  response.data[i].createdAt.slice(11,16)
+        var datetime = new Date(response.data[i].createdAt).toLocaleString();
         var chkVal = response.data[i].data[1].latitude
-        rowVal.push({date,time,ip,path,latlng,chkVal})
+        rowVal.push({datetime,ip,path,latlng,chkVal})
       }
       console.log(rowVal)
       this.setState({
         modalTable: {
           columns: [
             {
-              label: 'date/time',
+              label: 'date (MM/DD/YYYY)',
               field: 'dt',
             },
             {
@@ -252,7 +268,7 @@ class Dashboard extends Component {
           ],
           rows: [...rowVal.map((rowVal, index) => (
             {
-              dt: rowVal.date+' / '+rowVal.time,
+              dt: rowVal.datetime,
               ip: rowVal.ip,
               path: <div>{rowVal.path?rowVal.path:'index'}</div>,
               address: <div className="text-center">{rowVal.chkVal
@@ -268,19 +284,123 @@ class Dashboard extends Component {
         access: Item.access,
         browser: Item.browser,
         cookieId: Item.cookieId,
-        date: Item.date,
+        datetime: Item.datetime,
         ip: Item.ip,
         path: Item.path,
-        time: Item.time,
         type: Item.type,
         _id: Item._id,
         typeId: Item.typeId,
         latlng: Item.latlng,
+        chkVal: Item.chkVal,
         show: true,
       })
     })
   };
-  
+  handleChanage = (e) => {
+    console.log(e.target.value)
+    this.setState({[e.target.id] : e.target.value})
+  }
+  handleSearch= (e) => {
+    e.preventDefault();
+    var value = {
+      cookieid: this.state.txtcookieId,
+      date: this.state.txtdate,
+      ip: this.state.txtIp
+    }
+    axios.post("http://127.0.0.1:5000/cookies/api/data/search", value)
+    .then((response) => {
+      console.log(response)
+      var test = [];
+      for (var i=0; i<response.data.length; i++) {
+        var cookieId = response.data[i].cookieId
+        var datetime = new Date(response.data[i].createdAt).toLocaleString();
+        var access =  response.data[i].access
+        var _id =  response.data[i]._id
+        var ip = response.data[i].data[0].ipAdress
+        var type = response.data[i].data[1].diviceType
+        var path = response.data[i].data[6].pathname.split("/")[1]
+        var browser = response.data[i].data[9].browser
+        var typeId = response.data[i].typeId
+        
+        var absolute1 = Math.abs(response.data[i].data[2].latitude);
+        var degrees1 = Math.floor(absolute1);
+        var minutesNotTruncated1 = (absolute1 - degrees1) * 60;
+        var minutes1 = Math.floor(minutesNotTruncated1);
+        var seconds1 = ((minutesNotTruncated1 - minutes1) * 60).toFixed(2);
+        var absolute2 = Math.abs(response.data[i].data[3].longitude);
+        var degrees2 = Math.floor(absolute2);
+        var minutesNotTruncated2 = (absolute2 - degrees2) * 60;
+        var minutes2 = Math.floor(minutesNotTruncated2);
+        var seconds2 = ((minutesNotTruncated2 - minutes2) * 60).toFixed(2);
+        var latitudeCardinal = degrees1 >= 0 ? "N" : "S";
+        var longitudeCardinal = degrees2 >= 0 ? "E" : "W";
+        var latlng = degrees1+"°"+minutes1+"'"+seconds1+"''"+latitudeCardinal+"+"+degrees2+"°"+minutes2+"'"+seconds2+"''"+longitudeCardinal;
+        var chkVal = response.data[i].data[2].latitude
+        test.push({cookieId,datetime,access,_id,ip,type,path,browser,typeId,latlng,chkVal})
+      }
+      console.log(test)
+      this.setState({
+        dataTable: {
+          columns: [
+            {
+              label: 'date (MM/DD/YYYY)',
+              field: 'dt',
+              width: 150,
+              attributes: {
+                'aria-controls': 'DataTable',
+                'aria-label': 'cookie-id',
+                'text-align': 'center'
+                
+              },
+            },
+            {
+              label: 'cookies-id',
+              field: 'id',
+              width: 270,
+            },
+            {
+              label: 'ip',
+              field: 'ip',
+              width: 200,
+            },
+            {
+              label: 'type',
+              field: 'type',
+              width: 200,
+            },
+            {
+              label: 'browser',
+              field: 'browser',
+              width: 200,
+            },
+            {
+              label: <div className="text-center">details</div>,
+              field: 'detail',
+              width: 500,
+            },
+          ],
+          rows: [...test.map((item, index) => (
+            {
+              dt: item.datetime,
+              id: item.cookieId,
+              ip: item.ip,
+              type: item.type,
+              browser: item.browser,
+            //   status: <div className="text-center">{item.access==='1'
+            //   ?<i className="fas fa-check-circle check" id={'{"_id":"'+item._id+'", "access":"'+item.access+'"}'} onClick={this.changeStatus}></i>
+            //   :<i className="fas fa-times-circle noncheck" id={'{"_id":"'+item._id+'", "access":"'+item.access+'"}'} onClick={this.changeStatus}></i>}
+            // </div>,
+              detail: <div className="text-center">
+                <i className={item.access==='1'?"far fa-eye text-primary check":"far fa-eye check"} onClick={this.modalClick}
+                  id={'{"cookieId":"'+item.cookieId+'", "datetime":"'+item.datetime+'", "access":"'+item.access+'", "_id":"'+item._id+'", "ip":"'+item.ip+'", "type":"'+item.type+'", "path":"'+item.path+'", "browser":"'+item.browser+'", "typeId":"'+item.typeId+'", "latlng":"'+item.latlng+'", "chkVal":"'+item.chkVal+'"}'}
+                ></i>
+              </div>
+            }
+          ))]
+        },
+      })
+    })
+  }
   render() {
     return (
       <>
@@ -293,10 +413,12 @@ class Dashboard extends Component {
                     <Row>
                       <Col className="px-md-3" md="4">
                         <FormGroup>
-                          <label>Date/Time</label>
+                          <label>Date</label>
                           <Input className="txt1rem"
-                            defaultValue={this.state.date+' / '+this.state.time}
-                            type="text" disabled
+                            id="txtdate"
+                            defaultValue={this.state.txtdate}
+                            onChange={this.handleChanage}
+                            type="date"
                           />
                         </FormGroup>
                       </Col>
@@ -304,57 +426,53 @@ class Dashboard extends Component {
                         <FormGroup>
                           <label>Cookie-ID</label>
                           <Input className="txt1rem"
-                            defaultValue={this.state.cookieId}
-                            type="text" disabled
+                            id="txtcookieId"
+                            defaultValue={this.state.txtcookieId}
+                            onChange={this.handleChanage}
+                            type="text"
                           />
                         </FormGroup>
                       </Col>
-                      <Col className="pl-md-3" md="4">
+                      <Col className="px-md-3" md="4">
                         <FormGroup>
-                          <label htmlFor="exampleInputEmail1">
-                            IP
-                          </label>
-                          <Input className="txt1rem" type="text" disabled defaultValue={this.state.ip}/>
+                          <label>IP</label>
+                          <Input className="txt1rem"
+                            id="txtIp"
+                            defaultValue={this.state.txtIp}
+                            onChange={this.handleChanage}
+                            type="text"
+                          />
                         </FormGroup>
                       </Col>
-                      <Col className="pl-md-3" md="4">
+                      <Col className="px-md-3" md="4">
                         <FormGroup>
                           <label>Type</label>
-                          <Input className="txt1rem" defaultValue={this.state.type} type="text" disabled />
+                          <Input className="txt1rem"
+                            id="txtType"
+                            defaultValue={this.state.txtType}
+                            onChange={this.handleChanage}
+                            type="text"
+                          />
                         </FormGroup>
                       </Col>
-                      <Col className="pl-md-3" md="4">
-                        <FormGroup>
-                          <label>Path</label>
-                          <Input className="txt1rem" defaultValue={this.state.path} type="text" disabled />
-                        </FormGroup>
-                      </Col>
-                      <Col className="pl-md-3" md="4">
+                      <Col className="px-md-3" md="4">
                         <FormGroup>
                           <label>Browser</label>
-                          <Input className="txt1rem" defaultValue={this.state.browser} type="text" disabled />
+                          <Input className="txt1rem"
+                            id="txtcookieId"
+                            defaultValue={this.state.txtBrowser}
+                            onChange={this.handleChanage}
+                            type="text"
+                          />
                         </FormGroup>
                       </Col>
-                      <Col className="pl-md-3" md="4">
+                      <Col className="pl-md-3" md="2">
                         <FormGroup className="txt1rem">
-                          <label className="txt1rem">TypeID</label>
-                          <Input className="txt1rem" defaultValue={this.state.typeId} type="text" disabled/>
+                          <label></label>
+                          <Input className="" type="submit" value="Search" onClick={this.handleSearch}></Input>
                         </FormGroup>
-                      </Col>
-                      <Col className="pl-md-3" md="4">
-                      <FormGroup className="txt1rem">
-                      <label className="txt1rem">Address</label>
-                      <div className="my-address">{this.state.latlng
-                          ?<a href={"https://www.google.com/maps/place/"+this.state.latlng} target="_blank">
-                            <i class="fas fa-map-marked-alt"></i>
-                          </a>
-                          :''}
-                        </div>
-                        </FormGroup>
-                        
                       </Col>
                     </Row>
-                    
                   </Form>
                 </CardBody>
               </Card>
@@ -378,7 +496,7 @@ class Dashboard extends Component {
             onHide={() => this.setState({show: false})}
             dialogClassName="modal-90w"
             aria-labelledby="example-custom-modal-styling-title"
-          >
+        >
             <Modal.Header closeButton>
               <Modal.Title id="example-custom-modal-styling-title">
                 Details
@@ -392,9 +510,9 @@ class Dashboard extends Component {
                       <Row>
                         <Col className="px-md-3" md="4">
                           <FormGroup>
-                            <label>Date/Time</label>
+                            <label>Date (MM/DD/YYYY)</label>
                             <Input className="txt1rem"
-                              defaultValue={this.state.date+' / '+this.state.time}
+                              defaultValue={this.state.datetime}
                               type="text" disabled
                             />
                           </FormGroup>
@@ -435,29 +553,37 @@ class Dashboard extends Component {
                           </FormGroup>
                         </Col>
                         <Col className="pl-md-3" md="4">
-                          <FormGroup className="txt1rem">
+                          <FormGroup>
                             <label className="txt1rem">TypeID</label>
                             <Input className="txt1rem" defaultValue={this.state.typeId} type="text" disabled/>
                           </FormGroup>
                         </Col>
                         <Col className="pl-md-3" md="1">
-                        <FormGroup className="txt1rem">
-                        <label className="txt1rem">Address</label>
-                          <div className="my-address">{this.state.latlng
-                            ?<a href={"https://www.google.com/maps/place/"+this.state.latlng} target="_blank">
-                              <i class="fas fa-map-marked-alt"></i>
-                            </a>
-                            :''}
-                          </div>
+                          <FormGroup>
+                            <label className="txt1rem">Address</label>
+                            <div className="my-address">
+                              <a href={"https://www.google.com/maps/place/"+this.state.latlng} target="_blank" 
+                              className={this.state.chkVal?"":"disabled"} onClick={()=>console.log(this.state.chkVal)}>
+                                <i className="fas fa-map-marked-alt"></i>
+                              </a>
+                            </div>
                           </FormGroup>
                         </Col>
                         <Col className="pl-md-3" md="1">
-                          <FormGroup className="txt1rem">
+                          <FormGroup>
                             <label className="txt1rem">Status</label>
-                            <div className="text-center">{this.state.access==='1'
+                            {/* <div >{this.state.access==='1'
                               ?<i className="fas fa-check-circle check" id={'{"_id":"'+''+'", "access":"'+''+'"}'} onClick={this.changeStatus}></i>
                               :<i className="fas fa-times-circle noncheck" id={'{"_id":"'+''+'", "access":"'+''+'"}'} onClick={this.changeStatus}></i>}
-                            </div>
+                            </div> */}
+                            <Switch
+                              checked={this.state.access==='1'?true:false}
+                              onChange={this.changeStatus}
+                              color="primary"
+                              name="checkedB"
+                              id={'{"_id":"'+this.state._id+'", "access":"'+this.state.access+'"}'}
+                              inputProps={{ 'aria-label': 'primary checkbox' }}
+                            />
                           </FormGroup>
                         </Col>
                       </Row>
@@ -478,7 +604,7 @@ class Dashboard extends Component {
                 </Card>
               </Col>
             </Modal.Body>
-          </Modal>
+        </Modal>
       </>
     );
   }
