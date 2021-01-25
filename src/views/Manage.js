@@ -68,16 +68,15 @@ class Dashboard extends Component {
     };
   }
   componentDidMount(){
-    // this.timer = setInterval(
-    //   () => this.increment(),
-    //   10000
-    // )
+    this.timer = setInterval(
+      () => this.increment(),
+      10000
+    )
   }
   increment() {
     const _ = require("lodash");
     axios.get("http://127.0.0.1:5000/cookies/api/data")
     .then((response) => {
-      console.log(response.data)
       var test = [];
       for (var i=0; i<response.data.length; i++) {
         var cookieId = response.data[i].cookieId
@@ -106,7 +105,6 @@ class Dashboard extends Component {
         var chkVal = response.data[i].data[2].latitude
         test.push({cookieId,datetime,access,_id,ip,type,path,browser,typeId,latlng,chkVal})
       }
-      console.log(test)
       this.setState({
         dataTable: {
           columns: [
@@ -178,25 +176,19 @@ class Dashboard extends Component {
         _id: Item._id,
         access: Item.access,
     }
-    console.log(value)
     axios.post("http://127.0.0.1:5000/cookies/api/update", value)
     .then((response) => {
-        console.log(response)
         this.increment();
         this.setState({
           access: Item.access
         })
-    }).catch((error) => {
-    console.log(error)
-    });
+    }).catch((error) => {});
   }
   modalClick = (e) => {
     const Item = JSON.parse(e.target.id)
-    console.log(Item._id)
     if (Item.path==='') { Item.path = "index" }
     axios.get("http://127.0.0.1:5000/cookies/api/agree/"+Item.cookieId+"")
     .then((response) => {
-      console.log(response.data)
       var rowVal = [];
       for (var i=0; i<response.data.length; i++) {
         var absolute1 = Math.abs(response.data[i].data[1].latitude);
@@ -220,7 +212,6 @@ class Dashboard extends Component {
         var chkVal = response.data[i].data[1].latitude
         rowVal.push({datetime,ip,path,latlng,chkVal})
       }
-      console.log(rowVal)
       this.setState({
         modalTable: {
           columns: [
@@ -275,7 +266,6 @@ class Dashboard extends Component {
     })
   };
   handleChanage = (e) => {
-    console.log(e.target.value)
     this.setState({[e.target.id] : e.target.value})
   }
   handleSearch= (e) => {
@@ -289,7 +279,6 @@ class Dashboard extends Component {
     }
     axios.post("http://127.0.0.1:5000/cookies/api/data/search", value)
     .then((response) => {
-      console.log(response)
       var test = [];
       for (var i=0; i<response.data.length; i++) {
         var cookieId = response.data[i].cookieId
@@ -318,7 +307,6 @@ class Dashboard extends Component {
         var chkVal = response.data[i].data[2].latitude
         test.push({cookieId,datetime,access,_id,ip,type,path,browser,typeId,latlng,chkVal})
       }
-      console.log(test)
       this.setState({
         dataTable: {
           columns: [
@@ -543,7 +531,7 @@ class Dashboard extends Component {
                             <label className="txt1rem">Address</label>
                             <div className="my-address">
                               <a href={"https://www.google.com/maps/place/"+this.state.latlng} target="_blank" 
-                              className={this.state.chkVal?"":"disabled"} onClick={()=>console.log(this.state.chkVal)}>
+                              className={this.state.chkVal?"":"disabled"}>
                                 <i className="fas fa-map-marked-alt"></i>
                               </a>
                             </div>

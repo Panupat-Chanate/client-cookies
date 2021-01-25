@@ -71,9 +71,9 @@ class Dashboard extends Component {
     };
   }
   componentDidMount(){
-    // this.timer = setInterval(() => 
-    //   this.getAgree(),10000
-    // )
+    this.timer = setInterval(() => 
+      this.getAgree(),10000
+    )
   }
 
   getAgree() {
@@ -98,7 +98,6 @@ class Dashboard extends Component {
     var m12 = [];
     axios.get("http://127.0.0.1:5000/cookies/api/agree")
     .then((response) => {
-      console.log(response.data)
       var dateNow = new Date();
       var sliDateNow = dateNow.toLocaleString().slice(0, 9)
       var first = dateNow.getDate() - dateNow.getDay();
@@ -117,94 +116,83 @@ class Dashboard extends Component {
         var getMonth = dateNow.getMonth();
         
         if (sliDateNow===sliDateDB) {
-          if (strPath!=undefined) {
+          if (strPath!==undefined) {
             if (strPath==="/") { dPath.push("index") }
             else { dPath.push(strPath.split("/")[1].slice(0,10)) }
             dPeople.push(strPeople)
           }
         }
         if (getMonth===dbMonth) {
-          if (strPath!=undefined){
+          if (strPath!==undefined){
             if (strPath==='/') { mPath.push("index") }
             else { mPath.push(strPath.split("/")[1].slice(0,10)) }
             mPeople.push(strPeople)
           }
         }
-        if (sliDateDB>=fDay && sliDateDB<=lDay && strPath!=undefined) {
+        if (sliDateDB>=fDay && sliDateDB<=lDay && strPath!==undefined) {
           if (strPath==='/') { wPath.push("index") }
           else { wPath.push(strPath.split("/")[1].slice(0,10)) }
           wPeople.push(strPeople)
         }
 
+        var strM = response.data[i].data[5].pathname
         if (dbMonth===0) {
-          var strM = response.data[i].data[5].pathname
-          if (strM!=undefined){
+          if (strM!==undefined){
             if (strM==='/') { m1.push("index") }
             else {m1.push(strM.split("/")[1])}
           }
         } else if (dbMonth===1) {
-          var strM = response.data[i].data[5].pathname
-          if (strM!=undefined){
+          if (strM!==undefined){
             if (strM==='/') { m2.push("index") }
             else {m2.push(strM.split("/")[1])}
           }
         } else if (dbMonth===2) {
-          var strM = response.data[i].data[5].pathname
-          if (strM!=undefined){
+          if (strM!==undefined){
             if (strM==='/') { m3.push("index") }
             else {m3.push(strM.split("/")[1])}
           }
         } else if (dbMonth===3) {
-          var strM = response.data[i].data[5].pathname
-          if (strM!=undefined){
+          if (strM!==undefined){
             if (strM==='/') { m4.push("index") }
             else {m4.push(strM.split("/")[1])}
           }
         } else if (dbMonth===4) {
-          var strM = response.data[i].data[5].pathname
-          if (strM!=undefined){
+          if (strM!==undefined){
             if (strM==='/') { m5.push("index") }
             else {m5.push(strM.split("/")[1])}
           }
         } else if (dbMonth===5) {
-          var strM = response.data[i].data[5].pathname
-          if (strM!=undefined){
+          if (strM!==undefined){
             if (strM==='/') { m6.push("index") }
             else {m6.push(strM.split("/")[1])}
           }
         } else if (dbMonth===6) {
-          var strM = response.data[i].data[5].pathname
-          if (strM!=undefined){
+          if (strM!==undefined){
             if (strM==='/') { m7.push("index") }
             else {m7.push(strM.split("/")[1])}
           }
         } else if (dbMonth===7) {
-          var strM = response.data[i].data[5].pathname
-          if (strM!=undefined){
+          if (strM!==undefined){
             if (strM==='/') { m8.push("index") }
             else {m8.push(strM.split("/")[1])}
           }
         } else if (dbMonth===8) {
-          var strM = response.data[i].data[5].pathname
-          if (strM!=undefined){
+          if (strM!==undefined){
             if (strM==='/') { m9.push("index") }
             else {m9.push(strM.split("/")[1])}
           }
         } else if (dbMonth===9) {
-          var strM = response.data[i].data[5].pathname
-          if (strM!=undefined){
+          if (strM!==undefined){
             if (strM==='/') { m10.push("index") }
             else {m10.push(strM.split("/")[1])}
           }
         } else if (dbMonth===10) {
-          var strM = response.data[i].data[5].pathname
-          if (strM!=undefined){
+          if (strM!==undefined){
             if (strM==='/') { m11.push("index") }
             else {m11.push(strM.split("/")[1])}
           }
         } else if (dbMonth===11) {
-          var strM = response.data[i].data[5].pathname
-          if (strM!=undefined){
+          if (strM!==undefined){
             if (strM==='/') { m12.push("index") }
             else {m12.push(strM.split("/")[1])}
           }
@@ -347,7 +335,6 @@ class Dashboard extends Component {
   getData() {
     axios.get("http://127.0.0.1:5000/cookies/api/data")
     .then((response) => {
-      console.log(response.data)
       var rowVal = [];
       for (var i=0; i<response.data.length; i++) {
         var absolute1 = Math.abs(response.data[i].data[2].latitude);
@@ -414,13 +401,10 @@ class Dashboard extends Component {
     })
   }
   handleClick1=()=>{
-    // console.log(this.state.valDay)
-    // console.log(this.state.valWeek)
-    // console.log(this.state.valMonth)
     const datasetsCopy = this.state.dataCharts.datasets.slice(0);
     const dataCopy = datasetsCopy[0].data.slice(0);
 
-    if (this.state.valDay.length != '0') {
+    if (this.state.valDay.length !== '0') {
       for (var i=0; i<this.state.valDay.length; i++) {
         dataCopy[i] = this.state.valDay[i];
       }
@@ -442,12 +426,9 @@ class Dashboard extends Component {
     });
   }
   handleClick2=()=>{
-    // console.log(this.state.valDay)
-    // console.log(this.state.valWeek.length)
-    // console.log(this.state.valMonth)
     const datasetsCopy = this.state.dataCharts.datasets.slice(0);
     const dataCopy = datasetsCopy[0].data.slice(0);
-    if (this.state.valWeek.length != '0') {
+    if (this.state.valWeek.length !== '0') {
       for (var i=0; i<this.state.valWeek.length; i++) {
         dataCopy[i] = this.state.valWeek[i];
       }
@@ -469,12 +450,9 @@ class Dashboard extends Component {
     });
   }
   handleClick3=()=>{
-    // console.log('3',this.state.valDay)
-    // console.log('3',this.state.valWeek)
-    // console.log('3',this.state.valMonth)
     const datasetsCopy = this.state.dataCharts.datasets.slice(0);
     const dataCopy = datasetsCopy[0].data.slice(0);
-    if (this.state.valMonth.length != '0') {
+    if (this.state.valMonth.length !== '0') {
       for (var i=0; i<this.state.valMonth.length; i++) {
         dataCopy[i] = this.state.valMonth[i];
       }

@@ -21,14 +21,12 @@ import classNames from "classnames";
 import { useHistory } from 'react-router-dom';
 // reactstrap components
 import {
-  Button,
   Collapse,
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
   UncontrolledDropdown,
   Input,
-  InputGroup,
   NavbarBrand,
   Navbar,
   NavLink,
@@ -40,7 +38,6 @@ import {
 } from "reactstrap";
 
 function AdminNavbar(props) {
-  console.log(props)
   const [collapseOpen, setcollapseOpen] = React.useState(false);
   const [modalSearch, setmodalSearch] = React.useState(false);
   const [color, setcolor] = React.useState("navbar-transparent");

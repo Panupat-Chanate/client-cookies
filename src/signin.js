@@ -1,7 +1,6 @@
 import React,{useState} from "react"
 import { makeStyles } from "@material-ui/core/styles"
 import InputAdornment from "@material-ui/core/InputAdornment"
-import Icon from "@material-ui/core/Icon"
 import People from "@material-ui/icons/People"
 import GridContainer from "imcomponents/Grid/GridContainer.js"
 import GridItem from "imcomponents/Grid/GridItem.js"
@@ -14,7 +13,7 @@ import styles from "assets/jss/material-kit-react/views/loginPage.js"
 import Lottile from "imcomponents/lottie/index"
 import image from "assets/img/bg004.jfif"
 import axios from "axios"
-import { Link } from "react-router-dom"
+// import { Link } from "react-router-dom"
 import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles(styles)
@@ -43,10 +42,10 @@ export default function LoginContainer({ _login, _input, loading}) {
     window.location.reload()
   }
 
-  const historyPage =()=>{
-    history.goBack()
-    window.location.reload();
-  }
+  // const historyPage =()=>{
+  //   history.goBack()
+  //   window.location.reload();
+  // }
 
   _login = (e) => {
     e.preventDefault()
@@ -55,14 +54,12 @@ export default function LoginContainer({ _login, _input, loading}) {
       password: e.target.pass.value
 
     }
-    console.log(form)
     axios ({
       url: 'http://127.0.0.1:5000/cookies/api/users/checklogin',
       method: 'POST',
       data: form
     })
     .then((res) => {
-      console.log(res.data)
       const {statusLogin} = res.data.data
       const {token} = res.data
       localStorage.setItem(`tokenId`,token)
@@ -72,7 +69,6 @@ export default function LoginContainer({ _login, _input, loading}) {
       alert('ชื่อหรือรหัสผ่านผิด')
     })
     .catch((error) => {
-      console.log(error);
     });
 
   }
