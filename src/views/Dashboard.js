@@ -1,20 +1,9 @@
 import React,{Component} from "react";
 import classNames from "classnames";
-import { Line, Bar } from "react-chartjs-2";
+import { Line, Bar ,HorizontalBar} from "react-chartjs-2";
 import axios from 'axios';
-import Pagination from '@material-ui/lab/Pagination';
 import { MDBDataTable } from 'mdbreact';
-import {
-  Button,
-  ButtonGroup,
-  Card,
-  CardHeader,
-  CardBody,
-  CardTitle,
-  Row,
-  Col,
-} from "reactstrap";
-import { useHistory } from "react-router-dom";
+import {Button, ButtonGroup, Card, CardHeader, CardBody, CardTitle, Row, Col} from "reactstrap";
 
 class Dashboard extends Component {
   constructor(props) {
@@ -621,7 +610,7 @@ class Dashboard extends Component {
                   </CardHeader>
                   <CardBody>
                     <div className="chart-area">
-                      <Bar
+                      <HorizontalBar
                         data={this.state.dataCharts}
                         options={this.state.options}
                       />
