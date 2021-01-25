@@ -1,6 +1,6 @@
 import React,{Component} from "react";
 import classNames from "classnames";
-import { Line, Bar ,HorizontalBar} from "react-chartjs-2";
+import { Line, HorizontalBar} from "react-chartjs-2";
 import axios from 'axios';
 import { MDBDataTable } from 'mdbreact';
 import {Button, ButtonGroup, Card, CardHeader, CardBody, CardTitle, Row, Col} from "reactstrap";

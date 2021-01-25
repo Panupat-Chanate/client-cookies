@@ -1,34 +1,9 @@
 import React,{Component} from "react";
-import classNames from "classnames";
-import { Line, Bar } from "react-chartjs-2";
 import axios from 'axios';
-import Pagination from '@material-ui/lab/Pagination';
 import { MDBDataTable } from 'mdbreact';
-import {
-  Button,
-  ButtonGroup,
-  Card,
-  CardHeader,
-  CardBody,
-  CardTitle,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-  UncontrolledDropdown,
-  Label,
-  FormGroup,
-  Input,
-  Table,
-  Row,
-  Col,
-  UncontrolledTooltip,
-  Dropdown, Badge,
-  Form
-} from "reactstrap";
+import {Card, CardBody,FormGroup,Input,Row,Col,Form} from "reactstrap";
 import { Modal } from 'react-bootstrap';
 import Switch from '@material-ui/core/Switch';
-import TextField from '@material-ui/core/TextField';
-import { DatePicker, Space } from 'antd';
 
 class Dashboard extends Component {
   constructor(props) {
@@ -133,8 +108,6 @@ class Dashboard extends Component {
       }
       console.log(test)
       this.setState({
-        // cookie: response.data,
-        // access: access,
         dataTable: {
           columns: [
             {
