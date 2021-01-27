@@ -520,13 +520,14 @@ class Dashboard extends Component {
                             <Input className="txt1rem" defaultValue={this.state.browser} type="text" disabled />
                           </FormGroup>
                         </Col>
-                        <Col className="pl-md-3" md="4">
+                        <Col className="pl-md-3" md="1">
                           <FormGroup>
                             <label className="txt1rem">TypeID</label>
-                            <Input className="txt1rem" defaultValue={this.state.typeId} type="text" disabled/>
+                            {/* <Input className="txt1rem" defaultValue={this.state.typeId} type="text" disabled/> */}
+                            <Input className="" type="button" value={this.state.typeId} onClick={()=>this.setState({inshow: true})}></Input>
                           </FormGroup>
                         </Col>
-                        <Col className="pl-md-3" md="1">
+                        <Col className="pl-md-3" md="1" >
                           <FormGroup>
                             <label className="txt1rem">Address</label>
                             <div className="my-address">
@@ -572,6 +573,98 @@ class Dashboard extends Component {
                 </Card>
               </Col>
             </Modal.Body>
+        </Modal>
+
+        <Modal role="document" class="modal-dialog modal-sm"
+            dialogClassName="modal-sm"
+            aria-labelledby="example-custom-modal-styling-sm"
+        >
+          <Modal.Header closeButton>
+            <Modal.Title id="example-custom-modal-styling-title-sm">
+              Type-ID
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Col>
+              <Card>
+                <CardBody>
+                  <Form>
+                    <Row>
+                      
+                    </Row>
+                    
+                  </Form>
+                </CardBody>
+              </Card>
+            </Col>
+          </Modal.Body>
+        </Modal>
+
+        <Modal
+          className="testmodal"
+          show={this.state.inshow}
+          onHide={() => this.setState({inshow: false})}
+          size="lg"
+          aria-labelledby="contained-modal-title-vcenter"
+          centered
+        >
+          <Modal.Header closeButton>
+            <Modal.Title id="example-custom-modal-styling-title-sm">
+              Type-ID
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Col>
+              <Card>
+                <CardBody>
+                  <Form>
+                  <p>THIS WEBSITE USES COOKIES</p>
+                  <p>OSD CO.,LTD collects cookies to enble the proper functioning and security of our website, and help us offer you the best possible</p>
+                  <p>user experience.By clicking on Agree, you consent to the use of please read the OSD CO.,LTD <a href="#">Cookie management policy.</a></p>
+                  </Form>
+                </CardBody>
+              </Card>
+            </Col>
+            <Col>
+              <Card>
+                <CardBody>
+                  <Form>
+                    <p>SELECT YOUR CHOICE OF COOKIES ON OUR WEBSITE</p>
+                    <p>
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="all" value="option1" defaultChecked onClick={(e)=> this.setState({checked: e.target.value})}/>
+                        <label class="form-check-label" for="all">
+                          ALL COOKIES
+                        </label>
+                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="analytical" value="option2" onClick={(e)=> this.setState({checked: e.target.value})}/>
+                        <label class="form-check-label" for="analytical">
+                          ANALYTICAL COOKIES
+                        </label>
+                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="function" value="option3" onClick={(e)=> this.setState({checked: e.target.value})}/>
+                        <label class="form-check-label" for="function">
+                          FUNCTIONAL COOKIES
+                        </label>
+                      </div>
+                    </p>
+                    <p><i className="fas fa-check"></i> Functional Cookies</p>
+                      <p>&nbsp;&nbsp;&nbsp;● Are necessary for the proper functioning of the websites</p>
+                      <p>&nbsp;&nbsp;&nbsp;● Enable you to book a flight and access your account securely</p>
+                      <p>&nbsp;&nbsp;&nbsp;● do not collect any personal information</p>
+                      <div className="yel" hidden={this.state.checked==='option3'?false:true}>&nbsp;&nbsp;&nbsp; Please note: Disabling these cookies may impact your browsing experience onour website.</div>
+                    <p><i className="fas fa-check"></i> Analytical Cookies</p>
+                      <p>&nbsp;&nbsp;&nbsp;● Help us detect any bugs and improve our websites</p>
+                      <p>&nbsp;&nbsp;&nbsp;● Collect anonymous information about your visits to our websites</p>
+                      <p>&nbsp;&nbsp;&nbsp;● Are never used for marketing purposes</p>
+                      <div className="yel" hidden={this.state.checked==='option2'?false:true}>&nbsp;&nbsp;&nbsp; Please note: Disabling these cookies may impact your browsing experience onour website.</div>
+                    <p><i className="fas fa-check"></i> Marketing Cookies and Other Cookies</p>
+                      <p>&nbsp;&nbsp;&nbsp;● Store your preferences based on previous visits to our websites</p>
+                      <p>&nbsp;&nbsp;&nbsp;● Help us identify relevant e-mails, social media and banner ads for you</p>
+                      <p>&nbsp;&nbsp;&nbsp;● Allow our partners display offers and advertisements that suit your interests</p>
+                  </Form>
+                </CardBody>
+              </Card>
+            </Col>
+          </Modal.Body>
         </Modal>
       </>
     );

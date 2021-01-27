@@ -156,6 +156,12 @@
     max-width: none;
     margin: 0.5rem;
   }
+  .testmodal {
+    align-items: center;
+    /* max-width: 50%; */
+    /* margin-left: 200px; */
+    /* margin-right: 200px; */
+  }
   .page-link {
     cursor: pointer;
   }
@@ -168,6 +174,16 @@
     cursor: default;
     color: rgba(125, 125, 126, 0.3);
     /* ba54f5 */
+  }
+  .modal-content .modal-body p {
+    color: #fff;
+    margin-right: 20px;
+  }
+  .form-check-input {
+    margin-left: 10px;
+  }
+  .yel{
+    color: #ffd600;
   }
   .form-control {
     /* font-size: 1rem; */

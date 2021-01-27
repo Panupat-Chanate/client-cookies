@@ -52,7 +52,6 @@ export default function LoginContainer({ _login, _input, loading}) {
     const form = {
       username: e.target.username.value,
       password: e.target.pass.value
-
     }
     axios ({
       url: 'http://127.0.0.1:5000/cookies/api/users/checklogin',

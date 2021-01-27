@@ -1,6 +1,6 @@
 import React,{Component} from "react";
 import classNames from "classnames";
-import { Line, HorizontalBar} from "react-chartjs-2";
+import { Line, Bar ,HorizontalBar} from "react-chartjs-2";
 import axios from 'axios';
 import { MDBDataTable } from 'mdbreact';
 import {Button, ButtonGroup, Card, CardHeader, CardBody, CardTitle, Row, Col} from "reactstrap";
@@ -116,20 +116,20 @@ class Dashboard extends Component {
         var getMonth = dateNow.getMonth();
         
         if (sliDateNow===sliDateDB) {
-          if (strPath!==undefined) {
+          if (strPath!=undefined) {
             if (strPath==="/") { dPath.push("index") }
             else { dPath.push(strPath.split("/")[1].slice(0,10)) }
             dPeople.push(strPeople)
           }
         }
         if (getMonth===dbMonth) {
-          if (strPath!==undefined){
+          if (strPath!=undefined){
             if (strPath==='/') { mPath.push("index") }
             else { mPath.push(strPath.split("/")[1].slice(0,10)) }
             mPeople.push(strPeople)
           }
         }
-        if (sliDateDB>=fDay && sliDateDB<=lDay && strPath!==undefined) {
+        if (sliDateDB>=fDay && sliDateDB<=lDay && strPath!=undefined) {
           if (strPath==='/') { wPath.push("index") }
           else { wPath.push(strPath.split("/")[1].slice(0,10)) }
           wPeople.push(strPeople)
@@ -137,62 +137,62 @@ class Dashboard extends Component {
 
         var strM = response.data[i].data[5].pathname
         if (dbMonth===0) {
-          if (strM!==undefined){
+          if (strM!=undefined){
             if (strM==='/') { m1.push("index") }
             else {m1.push(strM.split("/")[1])}
           }
         } else if (dbMonth===1) {
-          if (strM!==undefined){
+          if (strM!=undefined){
             if (strM==='/') { m2.push("index") }
             else {m2.push(strM.split("/")[1])}
           }
         } else if (dbMonth===2) {
-          if (strM!==undefined){
+          if (strM!=undefined){
             if (strM==='/') { m3.push("index") }
             else {m3.push(strM.split("/")[1])}
           }
         } else if (dbMonth===3) {
-          if (strM!==undefined){
+          if (strM!=undefined){
             if (strM==='/') { m4.push("index") }
             else {m4.push(strM.split("/")[1])}
           }
         } else if (dbMonth===4) {
-          if (strM!==undefined){
+          if (strM!=undefined){
             if (strM==='/') { m5.push("index") }
             else {m5.push(strM.split("/")[1])}
           }
         } else if (dbMonth===5) {
-          if (strM!==undefined){
+          if (strM!=undefined){
             if (strM==='/') { m6.push("index") }
             else {m6.push(strM.split("/")[1])}
           }
         } else if (dbMonth===6) {
-          if (strM!==undefined){
+          if (strM!=undefined){
             if (strM==='/') { m7.push("index") }
             else {m7.push(strM.split("/")[1])}
           }
         } else if (dbMonth===7) {
-          if (strM!==undefined){
+          if (strM!=undefined){
             if (strM==='/') { m8.push("index") }
             else {m8.push(strM.split("/")[1])}
           }
         } else if (dbMonth===8) {
-          if (strM!==undefined){
+          if (strM!=undefined){
             if (strM==='/') { m9.push("index") }
             else {m9.push(strM.split("/")[1])}
           }
         } else if (dbMonth===9) {
-          if (strM!==undefined){
+          if (strM!=undefined){
             if (strM==='/') { m10.push("index") }
             else {m10.push(strM.split("/")[1])}
           }
         } else if (dbMonth===10) {
-          if (strM!==undefined){
+          if (strM!=undefined){
             if (strM==='/') { m11.push("index") }
             else {m11.push(strM.split("/")[1])}
           }
         } else if (dbMonth===11) {
-          if (strM!==undefined){
+          if (strM!=undefined){
             if (strM==='/') { m12.push("index") }
             else {m12.push(strM.split("/")[1])}
           }
@@ -404,7 +404,7 @@ class Dashboard extends Component {
     const datasetsCopy = this.state.dataCharts.datasets.slice(0);
     const dataCopy = datasetsCopy[0].data.slice(0);
 
-    if (this.state.valDay.length !== '0') {
+    if (this.state.valDay.length != '0') {
       for (var i=0; i<this.state.valDay.length; i++) {
         dataCopy[i] = this.state.valDay[i];
       }
@@ -428,7 +428,7 @@ class Dashboard extends Component {
   handleClick2=()=>{
     const datasetsCopy = this.state.dataCharts.datasets.slice(0);
     const dataCopy = datasetsCopy[0].data.slice(0);
-    if (this.state.valWeek.length !== '0') {
+    if (this.state.valWeek.length != '0') {
       for (var i=0; i<this.state.valWeek.length; i++) {
         dataCopy[i] = this.state.valWeek[i];
       }
@@ -452,7 +452,7 @@ class Dashboard extends Component {
   handleClick3=()=>{
     const datasetsCopy = this.state.dataCharts.datasets.slice(0);
     const dataCopy = datasetsCopy[0].data.slice(0);
-    if (this.state.valMonth.length !== '0') {
+    if (this.state.valMonth.length != '0') {
       for (var i=0; i<this.state.valMonth.length; i++) {
         dataCopy[i] = this.state.valMonth[i];
       }
@@ -474,7 +474,6 @@ class Dashboard extends Component {
     });
   }
   render() {
-    // if(this.props.location.state) {
       return (
         <>
           <div className="content">
@@ -635,9 +634,6 @@ class Dashboard extends Component {
           </div>
         </>
       );
-    // } else {
-    //   return 
-    // }
   }
 }
 
